@@ -10,7 +10,7 @@
     const back = () =>{
         router.push('/pokemons');
     }
-    const { data, getData } = useGetData();
+    const { data, getData, loading, error } = useGetData();
     getData(`https://pokeapi.co/api/v2/pokemon/${route.params.name}`);
     
 
@@ -18,6 +18,8 @@
 
 
 <template>
+    <p v-if="loading">Cargando informacion</p>
+    <div class="alert alert-danger" v-if="error">{{ error }}</div>
     <div v-if="data">
         <h1>{{ $route.params.name }}</h1>
         <img 
