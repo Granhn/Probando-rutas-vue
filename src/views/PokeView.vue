@@ -3,44 +3,31 @@
 
     import { onMounted, ref } from 'vue'
     import { useRoute, useRouter } from 'vue-router'
+    import {useGetData} from '@/composables/getData'
 
     const route = useRoute();
     const router = useRouter();
-    let poke = ref({});
-
     const back = () =>{
         router.push('/pokemons');
     }
-
-    const getData = async () =>{
-        try {
-            console.log(route.params.name)
-            const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${route.params.name}`);
-            poke.value = await data.json()
-            console.log(poke.value)
-        } catch (error) {
-            poke.value = null;
-            console.log('error');
-        }
-        
-    }
-    getData()
+    const { data, getData } = useGetData();
+    getData(`https://pokeapi.co/api/v2/pokemon/${route.params.name}`);
     
 
 </script>
 
 
 <template>
-    <div v-if="poke">
+    <div v-if="data">
         <h1>{{ $route.params.name }}</h1>
         <img 
-        :src="poke.sprites?.front_default" 
+        :src="data.sprites?.front_default" 
         alt="No carga la foto"
         >
         <h2>Pokemon type</h2>
         <ul>
             <li 
-            v-for="tipo in poke.types"
+            v-for="tipo in data.types"
             >
                 {{ tipo.type.name }}
             </li>
